@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import anime from 'animejs/lib/anime.es.js';
 
 const InteractiveViewer = ({ model, onBack }) => {
@@ -170,19 +170,6 @@ const InteractiveViewer = ({ model, onBack }) => {
     }
   }, []);
 
-  // Helper to parse cameraOrbit string (same format as ModelCard)
-  const parseOrbit = useCallback((orbitStr) => {
-    if (!orbitStr || typeof orbitStr !== 'string') return null;
-    const parts = orbitStr.trim().split(/\s+/);
-    if (parts.length < 3) return null;
-    const azimuth = parts[0];
-    const elevation = parts[1];
-    let radiusStr = parts.slice(2).join(' ');
-    radiusStr = radiusStr.replace(/m$/, '');
-    const radius = parseFloat(radiusStr);
-    if (Number.isNaN(radius)) return null;
-    return { azimuth, elevation, radius };
-  }, []);
 
   const handleInteract = () => {
     if (viewerRef.current) {
