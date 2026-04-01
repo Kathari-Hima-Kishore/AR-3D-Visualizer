@@ -24,6 +24,14 @@
       "dest": "/backend/server.js"
     },
     {
+      "src": "/models/(.*)",
+      "dest": "/backend/server.js"
+    },
+    {
+      "src": "/draco/(.*)",
+      "dest": "/backend/server.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }
