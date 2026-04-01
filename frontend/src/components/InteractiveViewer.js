@@ -4,7 +4,6 @@ import anime from 'animejs/lib/anime.es.js';
 const InteractiveViewer = ({ model, onBack }) => {
   const viewerRef = useRef(null);
   const containerRef = useRef(null);
-  const pinchRef = useRef({ active: false, initialDistance: 0, initialRadius: 0 });
   const [isVRSupported, setIsVRSupported] = useState(false);
   const [isARSupported, setIsARSupported] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -20,23 +19,6 @@ const InteractiveViewer = ({ model, onBack }) => {
     return isMobile;
   }, []);
 
-  // Mobile-optimized model viewer attributes
-  const mobileOptimizedAttributes = useMemo(() => {
-    if (!isMobile) return {};
-    return {
-      // Reduce quality for faster loading on mobile
-      'min-camera-orbit': 'auto auto 5%',
-      'max-camera-orbit': 'auto auto 50%',
-      // Optimize rendering
-      'power-preference': 'high-performance',
-      // Reduce shadow complexity
-      'shadow-intensity': '0.5',
-      'shadow-softness': '0.5',
-      // Optimize auto-rotation
-      'auto-rotate-delay': '5000',
-      'rotation-per-second': '5deg'
-    };
-  }, [isMobile]);
 
   const toggleFullscreen = useCallback(() => {
     if (!isFullscreen) {
@@ -201,23 +183,6 @@ const InteractiveViewer = ({ model, onBack }) => {
     if (Number.isNaN(radius)) return null;
     return { azimuth, elevation, radius };
   }, []);
-
-  const setOrbitRadius = useCallback((newRadius) => {
-    const mv = viewerRef.current;
-    if (!mv) return;
-    try {
-      const orbitRaw = mv.cameraOrbit || (mv.getCameraOrbit ? mv.getCameraOrbit() : null);
-      const parsed = parseOrbit(String(orbitRaw || '0deg 75deg 2.5m')) || { azimuth: '0deg', elevation: '75deg', radius: 2.5 };
-      const azimuth = parsed.azimuth;
-      const elevation = parsed.elevation;
-      const radius = Math.max(0.1, newRadius);
-      mv.cameraOrbit = `${azimuth} ${elevation} ${radius}m`;
-    } catch (e) {
-      console.warn('Unable to set camera orbit on interactive viewer:', e);
-    }
-  }, [parseOrbit]);
-
-
 
   const handleInteract = () => {
     if (viewerRef.current) {

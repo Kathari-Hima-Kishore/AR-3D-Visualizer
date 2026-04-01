@@ -5,7 +5,6 @@ const ModelCard = ({ model, onInteract, animationDelay = 0 }) => {
   const cardRef = useRef(null);
   const modelViewerRef = useRef(null);
   const previewRef = useRef(null);
-  const pinchRef = useRef({ active: false, initialDistance: 0, initialRadius: 0 });
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   // Touch capability detection must be declared before any hooks/effects that use it
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -208,12 +207,6 @@ const ModelCard = ({ model, onInteract, animationDelay = 0 }) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // Device performance detection
-  const isLowEndDevice = () => {
-    // Simple check: 4 or fewer logical processors or user agent match
-    return (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
-      /android|iphone|ipad|ipod|mobile|opera mini|iemobile|wpdesktop/i.test(navigator.userAgent);
-  };
 
   // Keep preview non-interactive: disable all AR and user input for the card preview.
   useEffect(() => {
@@ -233,9 +226,6 @@ const ModelCard = ({ model, onInteract, animationDelay = 0 }) => {
   
 
 
-
-  // Preview is non-interactive; wheel/zoom are disabled for the card.
-  
   const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
   // Backend base URL can be overridden via REACT_APP_BACKEND_URL (useful for tunnels)
   let backendUrl = process.env.REACT_APP_BACKEND_URL;
